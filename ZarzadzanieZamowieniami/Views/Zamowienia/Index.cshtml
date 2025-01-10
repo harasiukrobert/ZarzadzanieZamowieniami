@@ -1,0 +1,38 @@
+﻿@model IEnumerable<ZarzadzanieZamowieniami.Models.Zamowienie>
+@{
+    ViewData["Title"] = "Lista Zamówień";
+}
+
+<h1>Lista Zamówień</h1>
+
+<table class="table">
+    <thead>
+        <tr>
+            <th>Id</th>
+            <th>Data Złożenia</th>
+            <th>Status</th>
+            <th>Klient</th>
+            <th>Akcje</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var zamowienie in Model)
+        {
+            <tr>
+                <td>@zamowienie.Id</td>
+                <td>@zamowienie.DataZlozenia.ToString("yyyy-MM-dd")</td>
+                <td>@zamowienie.Status</td>
+                <td>@zamowienie.Klient.Imie @zamowienie.Klient.Nazwisko</td>
+                <td>
+                    <a asp-action="Details" asp-route-id="@zamowienie.Id">Szczegóły</a> |
+                    <a asp-action="Edit" asp-route-id="@zamowienie.Id">Edytuj</a> |
+                    <a asp-action="Delete" asp-route-id="@zamowienie.Id">Usuń</a>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>
+
+<div>
+    <a asp-action="Create" class="btn btn-primary">Dodaj Zamówienie</a>
+</div>
