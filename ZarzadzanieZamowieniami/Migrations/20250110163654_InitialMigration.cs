@@ -6,7 +6,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 namespace ZarzadzanieZamowieniami.Migrations
 {
     /// <inheritdoc />
-    public partial class InitialCreate : Migration
+    public partial class InitialMigration : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -68,7 +68,7 @@ namespace ZarzadzanieZamowieniami.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "PozycjeZamowien",
+                name: "PozycjeZamowienia",
                 columns: table => new
                 {
                     Id = table.Column<int>(type: "INTEGER", nullable: false)
@@ -80,15 +80,15 @@ namespace ZarzadzanieZamowieniami.Migrations
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_PozycjeZamowien", x => x.Id);
+                    table.PrimaryKey("PK_PozycjeZamowienia", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_PozycjeZamowien_Produkty_ProduktId",
+                        name: "FK_PozycjeZamowienia_Produkty_ProduktId",
                         column: x => x.ProduktId,
                         principalTable: "Produkty",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
-                        name: "FK_PozycjeZamowien_Zamowienia_ZamowienieId",
+                        name: "FK_PozycjeZamowienia_Zamowienia_ZamowienieId",
                         column: x => x.ZamowienieId,
                         principalTable: "Zamowienia",
                         principalColumn: "Id",
@@ -96,13 +96,13 @@ namespace ZarzadzanieZamowieniami.Migrations
                 });
 
             migrationBuilder.CreateIndex(
-                name: "IX_PozycjeZamowien_ProduktId",
-                table: "PozycjeZamowien",
+                name: "IX_PozycjeZamowienia_ProduktId",
+                table: "PozycjeZamowienia",
                 column: "ProduktId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_PozycjeZamowien_ZamowienieId",
-                table: "PozycjeZamowien",
+                name: "IX_PozycjeZamowienia_ZamowienieId",
+                table: "PozycjeZamowienia",
                 column: "ZamowienieId");
 
             migrationBuilder.CreateIndex(
@@ -115,7 +115,7 @@ namespace ZarzadzanieZamowieniami.Migrations
         protected override void Down(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.DropTable(
-                name: "PozycjeZamowien");
+                name: "PozycjeZamowienia");
 
             migrationBuilder.DropTable(
                 name: "Produkty");

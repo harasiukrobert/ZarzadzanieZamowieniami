@@ -1,15 +1,14 @@
-﻿// Views/Zamowienia/Create.cshtml
-@model ZarzadzanieZamowieniami.Models.Zamowienie
+﻿@model ZarzadzanieZamowieniami.Models.Zamowienie
 @{
     ViewData["Title"] = "Utwórz Zamówienie";
 }
 
 <h1>Utwórz Zamówienie</h1>
 
-<form asp-action="Create">
+<form asp-action="Create" method="post">
     <div class="form-group">
         <label asp-for="DataZlozenia" class="control-label"></label>
-        <input asp-for="DataZlozenia" class="form-control" />
+        <input asp-for="DataZlozenia" class="form-control" type="datetime-local" />
         <span asp-validation-for="DataZlozenia" class="text-danger"></span>
     </div>
     <div class="form-group">
@@ -23,7 +22,25 @@
         <span asp-validation-for="KlientId" class="text-danger"></span>
     </div>
 
-    <div class="form-group">
+
+    <h3>Pozycje zamówienia:</h3>
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Produkt</th>
+                <th>Ilość</th>
+                <th>Cena</th>
+                <th>Akcje</th>
+            </tr>
+        </thead>
+        <tbody id="pozycje-zamowienia">
+            @* Usunięto pętlę for, aby nie generować pustych pozycji przy ładowaniu widoku *@
+        </tbody>
+    </table>
+    <button type="button" class="btn btn-secondary" onclick="dodajPozycje()">Dodaj pozycję</button>
+
+
+    <div class="form-group mt-3">
         <input type="submit" value="Utwórz" class="btn btn-primary" />
     </div>
 </form>
@@ -34,4 +51,41 @@
 
 @section Scripts {
     @await Html.PartialAsync("_ValidationScriptsPartial")
+    <script>
+                function dodajPozycje() {
+            const tbody = document.getElementById('pozycje-zamowienia');
+            const rowIndex = tbody.children.length;
+            const produktySelect = @Html.Raw(Json.Serialize(ViewBag.Produkty));
+
+            if (!produktySelect || produktySelect.length === 0) {
+                console.error("Lista produktów jest pusta!");
+                alert("Nie można dodać pozycji - lista produktów jest pusta.");
+                return;
+            }
+
+            const row = document.createElement('tr');
+            row.innerHTML = `
+                <td>
+                    <select name="PozycjeZamowienia[${rowIndex}].ProduktId" class="form-control">
+                        ${produktySelect.map(p => `<option value="${p.value}">${p.text}</option>`).join('')}
+                    </select>
+                </td>
+                <td>
+                    <input name="PozycjeZamowienia[${rowIndex}].Ilosc" class="form-control" type="number" placeholder="Ilość" min="1" />
+                </td>
+                <td>
+                    <button type="button" class="btn btn-danger" onclick="usunPozycje(this)">Usuń</button>
+                </td>
+            `;
+            tbody.appendChild(row);
+        }
+
+
+
+
+        function usunPozycje(button) {
+            const row = button.closest('tr');
+            row.remove();
+        }
+    </script>
 }

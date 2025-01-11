@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
+using Microsoft.AspNetCore.Mvc.ModelBinding.Validation;
 
 namespace ZarzadzanieZamowieniami.Models
 {
@@ -25,11 +26,8 @@ namespace ZarzadzanieZamowieniami.Models
         [Required(ErrorMessage = "Pole 'Cena' jest wymagana.")]
         public decimal Cena { get; set; }
 
-        public List<PozycjaZamowienia> PozycjeZamowien { get; set; }
+        [ValidateNever]
+        public List<PozycjaZamowienia> PozycjeZamowienia { get; set; }
 
-        public Produkt()
-        {
-            PozycjeZamowien = new List<PozycjaZamowienia>();
-        }
     }
 }

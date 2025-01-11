@@ -1,7 +1,12 @@
 using Microsoft.EntityFrameworkCore;
 using ZarzadzanieZamowieniami;
+using System.Globalization;
 
 var builder = WebApplication.CreateBuilder(args);
+
+var defaultCulture = new CultureInfo("pl-PL"); // Zmieñ na w³aœciw¹ kulturê, np. "en-US" dla USA
+CultureInfo.DefaultThreadCurrentCulture = defaultCulture;
+CultureInfo.DefaultThreadCurrentUICulture = defaultCulture;
 
 // Add services to the container.
 builder.Services.AddControllersWithViews();

@@ -12,10 +12,11 @@ namespace ZarzadzanieZamowieniami
         public DbSet<Klient> Klienci { get; set; }
         public DbSet<Produkt> Produkty { get; set; }
         public DbSet<Zamowienie> Zamowienia { get; set; }
-        public DbSet<PozycjaZamowienia> PozycjeZamowien { get; set; }
+        public DbSet<PozycjaZamowienia> PozycjeZamowienia { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
         }
+
     }
 }

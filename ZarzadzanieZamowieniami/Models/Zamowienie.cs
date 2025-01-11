@@ -22,6 +22,9 @@ namespace ZarzadzanieZamowieniami.Models
 
         [ValidateNever]
         public Klient Klient { get; set; }
+        [ValidateNever]
+        public List<PozycjaZamowienia> PozycjeZamowienia { get; set; } = new List<PozycjaZamowienia>();
+
 
     }
 }

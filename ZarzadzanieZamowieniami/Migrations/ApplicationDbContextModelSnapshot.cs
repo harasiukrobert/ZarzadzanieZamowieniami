@@ -72,7 +72,7 @@ namespace ZarzadzanieZamowieniami.Migrations
 
                     b.HasIndex("ZamowienieId");
 
-                    b.ToTable("PozycjeZamowien");
+                    b.ToTable("PozycjeZamowienia");
                 });
 
             modelBuilder.Entity("ZarzadzanieZamowieniami.Models.Produkt", b =>
@@ -134,7 +134,7 @@ namespace ZarzadzanieZamowieniami.Migrations
             modelBuilder.Entity("ZarzadzanieZamowieniami.Models.PozycjaZamowienia", b =>
                 {
                     b.HasOne("ZarzadzanieZamowieniami.Models.Produkt", "Produkt")
-                        .WithMany("PozycjeZamowien")
+                        .WithMany("PozycjeZamowienia")
                         .HasForeignKey("ProduktId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
@@ -168,7 +168,7 @@ namespace ZarzadzanieZamowieniami.Migrations
 
             modelBuilder.Entity("ZarzadzanieZamowieniami.Models.Produkt", b =>
                 {
-                    b.Navigation("PozycjeZamowien");
+                    b.Navigation("PozycjeZamowienia");
                 });
 
             modelBuilder.Entity("ZarzadzanieZamowieniami.Models.Zamowienie", b =>
