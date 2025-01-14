@@ -11,8 +11,8 @@ using ZarzadzanieZamowieniami;
 namespace ZarzadzanieZamowieniami.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20250113143919_AddProductsTable")]
-    partial class AddProductsTable
+    [Migration("20250114173109_NowaMigracja")]
+    partial class NowaMigracja
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)

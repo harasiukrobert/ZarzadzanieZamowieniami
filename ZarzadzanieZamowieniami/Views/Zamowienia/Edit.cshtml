@@ -75,13 +75,14 @@
 @section Scripts {
     @await Html.PartialAsync("_ValidationScriptsPartial")
     <script>
-        function dodajPozycje() {
+                        function dodajPozycje() {
             const tbody = document.getElementById('pozycje-zamowienia');
             const rowIndex = tbody.children.length;
-
             const produktySelect = @Html.Raw(Json.Serialize(ViewBag.Produkty));
+            console.log(produktySelect);
 
             if (!produktySelect || produktySelect.length === 0) {
+                console.error("Lista produktów jest pusta!");
                 alert("Nie można dodać pozycji - lista produktów jest pusta.");
                 return;
             }
@@ -90,7 +91,7 @@
             row.innerHTML = `
                 <td>
                     <select name="PozycjeZamowienia[${rowIndex}].ProduktId" class="form-control">
-                        ${produktySelect.map(p => `<option value="${p.value}">${p.text}</option>`).join('')}
+                        ${produktySelect.$values.map(p => `<option value="${p.value}">${p.text}</option>`).join('')}
                     </select>
                 </td>
                 <td>

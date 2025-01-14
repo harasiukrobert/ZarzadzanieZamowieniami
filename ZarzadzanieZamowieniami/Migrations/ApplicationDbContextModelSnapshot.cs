@@ -213,31 +213,6 @@ namespace ZarzadzanieZamowieniami.Migrations
                     b.ToTable("AspNetUserTokens", (string)null);
                 });
 
-            modelBuilder.Entity("ZarzadzanieZamowieniami.Models.GlownaEncja", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("INTEGER");
-
-                    b.Property<bool>("Aktywny")
-                        .HasColumnType("INTEGER");
-
-                    b.Property<DateTime>("DataUtworzenia")
-                        .HasColumnType("TEXT");
-
-                    b.Property<string>("Nazwa")
-                        .IsRequired()
-                        .HasColumnType("TEXT");
-
-                    b.Property<string>("Opis")
-                        .IsRequired()
-                        .HasColumnType("TEXT");
-
-                    b.HasKey("Id");
-
-                    b.ToTable("GlownaEncja", (string)null);
-                });
-
             modelBuilder.Entity("ZarzadzanieZamowieniami.Models.Klient", b =>
                 {
                     b.Property<int>("Id")

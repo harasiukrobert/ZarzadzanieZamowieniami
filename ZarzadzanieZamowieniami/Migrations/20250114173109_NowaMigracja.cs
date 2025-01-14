@@ -6,7 +6,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 namespace ZarzadzanieZamowieniami.Migrations
 {
     /// <inheritdoc />
-    public partial class AddProductsTable : Migration
+    public partial class NowaMigracja : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
