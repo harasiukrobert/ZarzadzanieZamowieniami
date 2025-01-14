@@ -2,6 +2,7 @@
 using ZarzadzanieZamowieniami.Models;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.AspNetCore.Mvc.Rendering;
+using Microsoft.AspNetCore.Authorization;
 
 namespace ZarzadzanieZamowieniami.Controllers
 {
@@ -17,14 +18,14 @@ namespace ZarzadzanieZamowieniami.Controllers
 
         }
 
-        // GET: Zamowienia
+        //GET: Zamowienia
         public async Task<IActionResult> Index()
         {
             var applicationDbContext = _context.Zamowienia.Include(z => z.Klient);
             return View(await applicationDbContext.ToListAsync());
         }
 
-        // GET: Zamowienia/Details/5
+        //GET: Zamowienia/Details/5
         public async Task<IActionResult> Details(int? id)
         {
             if (id == null || _context.Zamowienia == null)
@@ -33,9 +34,9 @@ namespace ZarzadzanieZamowieniami.Controllers
             }
 
             var zamowienie = await _context.Zamowienia
-                .Include(z => z.Klient) // Ładowanie klienta
-                .Include(z => z.PozycjeZamowienia) // Ładowanie pozycji zamówienia
-                    .ThenInclude(pz => pz.Produkt) // Ładowanie produktów powiązanych z pozycjami zamówienia
+                .Include(z => z.Klient) 
+                .Include(z => z.PozycjeZamowienia) 
+                    .ThenInclude(pz => pz.Produkt)
                 .FirstOrDefaultAsync(m => m.Id == id);
 
             if (zamowienie == null)
@@ -47,8 +48,7 @@ namespace ZarzadzanieZamowieniami.Controllers
         }
 
 
-        // GET: Zamowienia/Create
-        // GET: Zamowienia/Create
+        //GET: Zamowienia/Create
         public IActionResult Create()
         {
             ViewData["KlientId"] = new SelectList(_context.Klienci, "Id", "Nazwisko");
@@ -56,19 +56,19 @@ namespace ZarzadzanieZamowieniami.Controllers
 
             return View(new Zamowienie
             {
-                PozycjeZamowienia = new List<PozycjaZamowienia>() // Inicjalizuj pustą listę, zamiast dodawać pusty obiekt
+                PozycjeZamowienia = new List<PozycjaZamowienia>()
             });
         }
 
 
-        // POST: Zamowienia/Create
+        //POST: Zamowienia/Create
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create(Zamowienie zamowienie)
         {
-            // Filtruj puste pozycje zamówienia
+            
             zamowienie.PozycjeZamowienia = zamowienie.PozycjeZamowienia
-                .Where(p => p.ProduktId != 0 && p.Ilosc > 0) // Sprawdź, czy ProduktId jest ustawione i Ilość jest większa od 0
+                .Where(p => p.ProduktId != 0 && p.Ilosc > 0)
                 .ToList();
 
             if (ModelState.IsValid)
@@ -102,7 +102,8 @@ namespace ZarzadzanieZamowieniami.Controllers
 
 
 
-        // GET: Zamowienia/Edit/5
+        //GET: Zamowienia/Edit/5
+        [Authorize(Policy = "Administrator")]
         public async Task<IActionResult> Edit(int? id)
         {
             if (id == null || _context.Zamowienia == null)
@@ -112,7 +113,7 @@ namespace ZarzadzanieZamowieniami.Controllers
 
             var zamowienie = await _context.Zamowienia
                 .Include(z => z.PozycjeZamowienia)
-                    .ThenInclude(pz => pz.Produkt) // Ładujemy powiązane produkty
+                    .ThenInclude(pz => pz.Produkt)
                 .FirstOrDefaultAsync(z => z.Id == id);
 
             if (zamowienie == null)
@@ -120,10 +121,7 @@ namespace ZarzadzanieZamowieniami.Controllers
                 return NotFound();
             }
 
-            // Przygotuj listę produktów dla dropdown
             ViewData["Produkty"] = new SelectList(_context.Produkty, "Id", "Nazwa");
-
-            // Przygotuj listę klientów dla dropdown (jeśli istnieje)
             ViewData["KlientId"] = new SelectList(_context.Klienci, "Id", "Nazwisko", zamowienie.KlientId);
 
             return View(zamowienie);
@@ -131,6 +129,7 @@ namespace ZarzadzanieZamowieniami.Controllers
 
 
         // POST: Zamowienia/Edit/5
+        [Authorize(Policy = "Administrator")]
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Edit(int id, Zamowienie zamowienie)
@@ -140,32 +139,27 @@ namespace ZarzadzanieZamowieniami.Controllers
                 return NotFound();
             }
 
-            // Filtruj puste lub niepoprawne pozycje zamówienia
             zamowienie.PozycjeZamowienia = zamowienie.PozycjeZamowienia
-                .Where(p => p.ProduktId != 0 && p.Ilosc > 0) // Sprawdź, czy ProduktId jest ustawione i Ilość > 0
+                .Where(p => p.ProduktId != 0 && p.Ilosc > 0)
                 .ToList();
 
             if (ModelState.IsValid)
             {
                 try
                 {
-                    // Pobierz aktualne pozycje zamówienia z bazy danych
                     var istniejącePozycje = _context.PozycjeZamowienia
                         .Where(p => p.ZamowienieId == zamowienie.Id)
                         .ToList();
 
-                    // Usuwanie wszystkich pozycji z zamówienia
                     _context.PozycjeZamowienia.RemoveRange(istniejącePozycje);
                     await _context.SaveChangesAsync();
 
-                    // Dodawanie zaktualizowanych pozycji
                     foreach (var nowaPozycja in zamowienie.PozycjeZamowienia)
                     {
                         nowaPozycja.ZamowienieId = zamowienie.Id;
                         _context.PozycjeZamowienia.Add(nowaPozycja);
                     }
 
-                    // Aktualizacja samego zamówienia
                     _context.Update(zamowienie);
 
                     await _context.SaveChangesAsync();
@@ -184,7 +178,6 @@ namespace ZarzadzanieZamowieniami.Controllers
                 return RedirectToAction(nameof(Index));
             }
 
-            // Przygotuj dane do widoku w przypadku błędów walidacji
             ViewData["Produkty"] = new SelectList(_context.Produkty, "Id", "Nazwa");
             ViewData["KlientId"] = new SelectList(_context.Klienci, "Id", "Nazwisko", zamowienie.KlientId);
             return View(zamowienie);
@@ -193,7 +186,8 @@ namespace ZarzadzanieZamowieniami.Controllers
 
 
 
-        // GET: Zamowienia/Delete/5
+        //GET: Zamowienia/Delete/5
+        [Authorize(Policy = "Administrator")]
         public async Task<IActionResult> Delete(int? id)
         {
             if (id == null || _context.Zamowienia == null)
@@ -213,7 +207,7 @@ namespace ZarzadzanieZamowieniami.Controllers
             return View(zamowienie);
         }
 
-        // POST: Zamowienia/Delete/5
+        //POST: Zamowienia/Delete/5
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)
@@ -228,7 +222,6 @@ namespace ZarzadzanieZamowieniami.Controllers
 
             if (zamowienie != null)
             {
-                // Usuwanie pozycji zamówienia
                 foreach (var pozycja in zamowienie.PozycjeZamowienia)
                 {
                     _context.Remove(pozycja);

@@ -1,21 +1,22 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using ZarzadzanieZamowieniami.Models; // Użyj nazwy swojego projektu
+using ZarzadzanieZamowieniami.Models; 
 using Microsoft.EntityFrameworkCore;
+using Microsoft.AspNetCore.Authorization;
 
-namespace ZarzadzanieZamowieniami.Controllers // Użyj nazwy swojego projektu
+namespace ZarzadzanieZamowieniami.Controllers 
 {
     public class KlienciController : Controller
     {
         private readonly ApplicationDbContext _context;
         private readonly ILogger<KlienciController> _logger;
 
-        public KlienciController(ApplicationDbContext context, ILogger<KlienciController> logger) // Update constructor
+        public KlienciController(ApplicationDbContext context, ILogger<KlienciController> logger)
         {
             _context = context;
             _logger = logger;
         }
 
-        // GET: Klienci
+        //GET: Klienci
         public async Task<IActionResult> Index()
         {
             return _context.Klienci != null ?
@@ -23,7 +24,7 @@ namespace ZarzadzanieZamowieniami.Controllers // Użyj nazwy swojego projektu
                         Problem("Entity set 'ApplicationDbContext.Klienci'  is null.");
         }
 
-        // GET: Klienci/Details/5
+        //GET: Klienci/Details/5
         public async Task<IActionResult> Details(int? id)
         {
             if (id == null || _context.Klienci == null)
@@ -41,15 +42,13 @@ namespace ZarzadzanieZamowieniami.Controllers // Użyj nazwy swojego projektu
             return View(klient);
         }
 
-        // GET: Klienci/Create
+        //GET: Klienci/Create
         public IActionResult Create()
         {
             return View();
         }
 
-        // POST: Klienci/Create
-        // To protect from overposting attacks, enable the specific properties you want to bind to.
-        // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
+        //POST: Klienci/Create
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create([Bind("Id,Imie,Nazwisko,Adres,Telefon,Email")] Klient klient)
@@ -73,7 +72,8 @@ namespace ZarzadzanieZamowieniami.Controllers // Użyj nazwy swojego projektu
             return View(klient);
         }
 
-        // GET: Klienci/Edit/5
+        //GET: Klienci/Edit/5
+        [Authorize(Policy = "Administrator")]
         public async Task<IActionResult> Edit(int? id)
         {
             if (id == null || _context.Klienci == null)
@@ -89,9 +89,7 @@ namespace ZarzadzanieZamowieniami.Controllers // Użyj nazwy swojego projektu
             return View(klient);
         }
 
-        // POST: Klienci/Edit/5
-        // To protect from overposting attacks, enable the specific properties you want to bind to.
-        // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
+        //POST: Klienci/Edit/5
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Edit(int id, [Bind("Id,Imie,Nazwisko,Adres,Telefon,Email")] Klient klient)
@@ -124,7 +122,8 @@ namespace ZarzadzanieZamowieniami.Controllers // Użyj nazwy swojego projektu
             return View(klient);
         }
 
-        // GET: Klienci/Delete/5
+        //GET: Klienci/Delete/5
+        [Authorize(Policy = "Administrator")]
         public async Task<IActionResult> Delete(int? id)
         {
             if (id == null || _context.Klienci == null)
@@ -142,7 +141,7 @@ namespace ZarzadzanieZamowieniami.Controllers // Użyj nazwy swojego projektu
             return View(klient);
         }
 
-        // POST: Klienci/Delete/5
+        //POST: Klienci/Delete/5
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)

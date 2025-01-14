@@ -79,7 +79,6 @@
             const tbody = document.getElementById('pozycje-zamowienia');
             const rowIndex = tbody.children.length;
 
-            // Pobierz opcje produktów jako JSON
             const produktySelect = @Html.Raw(Json.Serialize(ViewBag.Produkty));
 
             if (!produktySelect || produktySelect.length === 0) {
